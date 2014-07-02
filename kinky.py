@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 
+import time
 import threading
 import logging
 import subprocess
@@ -9,6 +10,7 @@ class StatusBar(object):
     before = ' '
     between = ' | '
     after = ' '
+    error_value = 'restarting'
     items = None
 
     def __init__(self):
@@ -27,8 +29,8 @@ class StatusBar(object):
             print(self.before + text + self.after)
 
 
-class Item(threading.Thread):
-    thread = None
+class Item(object):
+    _thread = None
     bar = None
     running = None
     _text = None
@@ -45,13 +47,25 @@ class Item(threading.Thread):
     def spawn(self, bar):
         self.bar = bar
         self.running = True
-        self.start()
+        self._thread = threading.Thread(target=self._run)
+        self._thread.start()
 
     def kill(self):
         self.running = False
 
+    def _run(self):
+        while True:
+            try:
+                self.run()
+            except Exception as e:
+                logging.exception('')
+                self.text = self.bar.error_value
+                time.sleep(5)
+            else:
+                break
+
     def run(self):
-        raise NotImplementedError
+        raise NotImplementedError()
 
 
 # UTILS
