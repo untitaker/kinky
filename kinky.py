@@ -52,11 +52,12 @@ class Item(object):
         while True:
             try:
                 self.run()
-            except Exception as e:
+            except Exception:
                 logging.exception('')
                 self.text = self.bar.error_value
                 time.sleep(5)
             else:
+                self.text = None
                 break
 
     def run(self):
