@@ -58,11 +58,11 @@ class Item(threading.Thread):
 def shell(command, errors=False):
     '''Executes a command on the shell and returns its output'''
     try:
-        return subprocess.check_output(command, shell=True).decode()
+        return subprocess.check_output(command, shell=True) \
+                .decode('utf-8', errors='replace')
     except subprocess.CalledProcessError:
         if errors:
             raise
-
 
 def is_running(process):
     '''Determines if a process with the given process name is running'''
