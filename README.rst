@@ -18,13 +18,13 @@ Create a file called `my_kinky.py`:
 
     class Clock(Item):
         def run(self):
-            while self.running:
+            while True:
                 self.text = datetime.datetime.now().strftime('%H:%M')
                 time.sleep(60)  # update interval: a minute
 
     class Volume(Item):
         def run(self):
-            while self.running:
+            while True:
                 # somehow get system volume and save it as a string in self.text
                 # self.text = "34%"
                 time.sleep(.3)  # update interval: 0.3 seconds

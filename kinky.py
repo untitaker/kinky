@@ -32,7 +32,6 @@ class StatusBar(object):
 class Item(object):
     _thread = None
     bar = None
-    running = None
     _text = None
 
     @property
@@ -46,12 +45,8 @@ class Item(object):
 
     def spawn(self, bar):
         self.bar = bar
-        self.running = True
         self._thread = threading.Thread(target=self._run)
         self._thread.start()
-
-    def kill(self):
-        self.running = False
 
     def _run(self):
         while True:
