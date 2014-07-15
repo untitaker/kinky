@@ -2,7 +2,8 @@
 
 import threading
 import logging
-from subprocess import Popen, PIPE
+import subprocess
+
 
 class StatusBar(object):
     before = ' '
@@ -19,17 +20,19 @@ class StatusBar(object):
             item.spawn(self)
 
     def draw(self):
-        text = [item.text.replace('\n', '') for item in self.items if item.text is not None]
+        text = [item.text.replace('\n', '')
+                for item in self.items if item.text is not None]
         text = self.between.join(text).strip()
         if text:
             print(self.before + text + self.after)
+
 
 class Item(threading.Thread):
     thread = None
     bar = None
     running = None
     _text = None
-    
+
     @property
     def text(self):
         return self._text
@@ -52,10 +55,15 @@ class Item(threading.Thread):
 
 
 # UTILS
-def shell(command):
+def shell(command, errors=False):
     '''Executes a command on the shell and returns its output'''
-    return Popen(command, shell=True, stdout=PIPE).stdout.read().decode()
+    try:
+        return subprocess.check_output(command, shell=True).decode()
+    except subprocess.CalledProcessError:
+        if errors:
+            raise
+
 
 def is_running(process):
     '''Determines if a process with the given process name is running'''
-    return shell('ps -A | grep -c ' + process).strip() != '0'
+    return shell('ps -A | grep -q ' + process) is not None
