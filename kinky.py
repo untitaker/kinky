@@ -67,6 +67,14 @@ class Item(object):
 
 
 # UTILS
+
+def shell_stream(command):
+    '''Stream lines of command stdout'''
+    p = subprocess.Popen(command, shell=True, universal_newlines=True,
+                         stdout=subprocess.PIPE)
+    yield from p.stdout
+
+
 def shell(command, errors=False):
     '''Executes a command on the shell and returns its output'''
     try:
