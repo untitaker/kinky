@@ -40,6 +40,8 @@ class Item(object):
 
     @text.setter
     def text(self, value):
+        if value == self._text:
+            return
         self._text = value
         self.bar.draw()
 
